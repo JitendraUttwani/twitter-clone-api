@@ -74,9 +74,54 @@ const registerController = async (req,res) => {
     }
 }
 
+const checkEmail = async (req, res) => {
+    try {
+    const { email } = req.body;
+    console.log(email);
+    console.log(typeof email);
+    if(!email){
+        return res.status(400).json({
+            success: false,
+            message: 'Email is required',
+        });
+    }
+      const user = await User.query().findOne({ email });
+      if (user) {
+        res.status(200).json({ success: false, message: "User already exists", data: true});
+      } else {
+        res.status(200).json({ success: true, message: 'You can continue with signup', data: false });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal Server Error', error: error});
+    }
+}
+const checkUsername = async (req, res) => {
+    try {
+        const { username } = req.body;
+        if(!username){
+            return res.status(400).json({
+                success: false,
+                message: 'username is required',
+            });
+        }
+          const user = await User.query().findOne({ username });
+          if (user) {
+            res.status(200).json({ success: false, message: "Username already taken", data: true});
+          } else {
+            res.status(200).json({ success: true, message: 'You can continue with signup', data: false });
+          }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal Server Error', error: error });
+    }
+  };
+  
 
 
 module.exports = {
     loginController,
-    registerController
+    registerController,
+    checkEmail,
+    checkUsername
 }

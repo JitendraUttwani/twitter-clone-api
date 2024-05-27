@@ -6,6 +6,7 @@ const { getTimeline, getUserDetailsAndPosts, getSuggestionsToFollow, getDetailsA
 router.get('/timeline', getTimeline);
 router.get('/profile', getDetailsAndPosts);
 router.post('/follow/:id', follow);
+
 router.delete('/unfollow/:id', unfollow);
 router.get('/profile/:id', getUserDetailsAndPosts);
 router.get('/suggestions', getSuggestionsToFollow);

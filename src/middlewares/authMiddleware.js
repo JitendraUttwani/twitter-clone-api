@@ -3,7 +3,11 @@ const jwt = require('jsonwebtoken');
 function authenticateToken(req, res, next) {
     try {
         const authHeader = req.headers['authorization'];
+        console.log(req)
+        console.log(req.params.id);
+        console.log(authHeader);
         const token = authHeader && authHeader.split(' ')[1];
+        console.log(token);
         if (!token) {
             return res.status(401).send({
                 success: false,

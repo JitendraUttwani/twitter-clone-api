@@ -30,12 +30,16 @@ const getDetailsAndPosts = async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
         const userPosts = await Post.query().where('user_id', userId).orderBy('created_at', 'desc');
+        const followers = await Follows.query().select('follower_id').where('followee_id', userId);
+        const followings = await Follows.query().select('followee_id').where('follower_id', userId);
         const {password, ...newData} = user;
         res.status(200).json({
             success: true,
             data: {
                 user: newData,
                 userPosts,
+                followers,
+                followings
             },
             message: 'User details and posts fetched successfully',
         });
@@ -53,6 +57,8 @@ const getUserDetailsAndPosts = async (req, res) => {
         }
         const userPosts = await Post.query().where('user_id', userId).orderBy('created_at', 'desc');
         const follows = await Follows.query().select('followee_id').where('follower_id', req.userId).where('followee_id', userId);
+        const followers = await Follows.query().select('follower_id').where('followee_id', userId);
+        const followings = await Follows.query().select('followee_id').where('follower_id', userId);
         const {password, ...newData} = user;
         console.log(follows);
         newData.follows = (follows && follows.length ? true : false);
@@ -61,6 +67,8 @@ const getUserDetailsAndPosts = async (req, res) => {
             data: {
                 user: newData,
                 userPosts,
+                followers,
+                followings,
             },
             message: 'User details and posts fetched successfully',
         });
