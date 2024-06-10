@@ -29,6 +29,7 @@ class User extends Model {
   static get relationMappings() {
     const Follows = require('./Follows');
     const Post = require('./Post');
+    const Like = require('./Like');
     return {
       following: {
         relation: Model.ManyToManyRelation,
@@ -60,6 +61,14 @@ class User extends Model {
         join: {
           from: 'User.user_id',
           to: 'Post.user_id'
+        }
+      },
+      likes: {
+        relation: Model.HasManyRelation,
+        modelClass: Like,
+        join: {
+          from: 'users.user_id',
+          to: 'likes.user_id'
         }
       }
     };

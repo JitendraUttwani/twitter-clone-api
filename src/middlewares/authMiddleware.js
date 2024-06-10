@@ -1,14 +1,13 @@
 const jwt = require('jsonwebtoken');
+const { checkTokenValidity } = require('../utils/logout');
 
 function authenticateToken(req, res, next) {
     try {
         const authHeader = req.headers['authorization'];
-        console.log(req)
-        console.log(req.params.id);
-        console.log(authHeader);
         const token = authHeader && authHeader.split(' ')[1];
-        console.log(token);
-        if (!token) {
+        // console.log(req.headers);
+        // console.log(object)
+        if (!token || checkTokenValidity(token)) {
             return res.status(401).send({
                 success: false,
                 message: 'Unauthorized',
@@ -23,6 +22,7 @@ function authenticateToken(req, res, next) {
                 });
             }
             req.userId = user.userId;
+            console.log(req.userId);
             next();
         });
     } catch (error) {

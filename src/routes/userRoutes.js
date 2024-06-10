@@ -1,15 +1,19 @@
 const router = require('express').Router();
 const { follow, unfollow } = require('../controllers/followController');
-const { getTimeline, getUserDetailsAndPosts, getSuggestionsToFollow, getDetailsAndPosts } = require('../controllers/userController');
+const { getTimeline, getSuggestionsToFollow, getUserData, getAllPosts, getAllFollowers, getAllFollowings, getAllLikedPosts } = require('../controllers/userController');
 
 
 router.get('/timeline', getTimeline);
-router.get('/profile', getDetailsAndPosts);
-router.post('/follow/:id', follow);
+router.post('/:userId/follow', follow);
 
-router.delete('/unfollow/:id', unfollow);
-router.get('/profile/:id', getUserDetailsAndPosts);
+router.delete('/:userId/unfollow', unfollow);
 router.get('/suggestions', getSuggestionsToFollow);
+router.get('/:userId', getUserData);
+router.get('/:userId/posts', getAllPosts);
+router.get('/:userId/followers', getAllFollowers);
+router.get('/:userId/followings', getAllFollowings);
+router.get('/:userId/liked-posts', getAllLikedPosts);
+
 
 
 module.exports = router;

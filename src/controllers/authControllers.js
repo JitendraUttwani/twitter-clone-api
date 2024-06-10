@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { blacklistToken } = require("../utils/logout");
 
 const loginController = async (req,res) => {
     try {
@@ -77,8 +78,8 @@ const registerController = async (req,res) => {
 const checkEmail = async (req, res) => {
     try {
     const { email } = req.body;
-    console.log(email);
-    console.log(typeof email);
+    // console.log(email);
+    // console.log(typeof email);
     if(!email){
         return res.status(400).json({
             success: false,
@@ -116,12 +117,30 @@ const checkUsername = async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal Server Error', error: error });
     }
   };
-  
+
+
+const logoutController = async (req, res) => {
+    try {
+        const token = req.header('Authorization').split(' ')[1];
+        // console.log(token);
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Token is missing' });
+        }
+
+        blacklistToken(token);
+
+        res.status(200).json({ success: true, message: 'Logged out successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+}
 
 
 module.exports = {
     loginController,
     registerController,
     checkEmail,
-    checkUsername
+    checkUsername,
+    logoutController
 }

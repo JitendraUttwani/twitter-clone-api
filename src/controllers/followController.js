@@ -4,13 +4,13 @@ const { checkUserExists } = require("../utils/user");
 
 const follow = async (req,res) => {
     try {
-        if(!req.params.id){
+        if(!req.params.userId){
             return res.status(400).json({
                 success: false,
                 message: 'User id is required',
             });
         }
-        const followeeId = parseInt(req.params.id);
+        const followeeId = parseInt(req.params.userId);
         const exists = await checkUserExists(followeeId);
         if(!exists){
             return res.status(404).json({
@@ -34,13 +34,13 @@ const follow = async (req,res) => {
 }
 const unfollow = async (req,res) => {
     try {
-        if(!req.params.id){
+        if(!req.params.userId){
             return res.status(400).json({
                 success: false,
                 message: 'User id is required',
             });
         }
-        const followeeId = parseInt(req.params.id);
+        const followeeId = parseInt(req.params.userId);
         const exists = await checkUserExists(followeeId);
         if(!exists){
             return res.status(404).json({
@@ -58,6 +58,11 @@ const unfollow = async (req,res) => {
         console.error(error);
         res.status(500).json({ message: 'Error unfollowing user', success: false, error: error });
     }
+}
+
+
+const getAllFollowers = (req, res) => {
+
 }
 
 module.exports = {

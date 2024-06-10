@@ -1,22 +1,21 @@
 const { Model } = require('objection');
 
-class Post extends Model {
+class Like extends Model {
   static get tableName() {
-    return 'posts';
+    return 'likes';
   }
 
   static get idColumn() {
-    return 'post_id';
+    return ['user_id', 'post_id'];
   }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['user_id', 'message'],
+      required: ['user_id', 'post_id'],
       properties: {
-        post_id: { type: 'integer' },
         user_id: { type: 'integer' },
-        message: { type: 'string'},
+        post_id: { type: 'integer' },
         created_at: { type: 'string', format: 'date-time' }
       }
     };
@@ -24,26 +23,27 @@ class Post extends Model {
 
   static get relationMappings() {
     const User = require('./User');
-    const Like = require('./Like');
+    const Post = require('./Post');
+
     return {
       user: {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'Post.user_id',
-          to: 'User.user_id'
+          from: 'likes.user_id',
+          to: 'users.user_id'
         }
       },
-      likes: {
-        relation: Model.HasManyRelation,
-        modelClass: Like,
+      post: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Post,
         join: {
-          from: 'posts.post_id',
-          to: 'likes.post_id'
+          from: 'likes.post_id',
+          to: 'posts.post_id'
         }
       }
     };
   }
 }
 
-module.exports = Post;
+module.exports = Like;
